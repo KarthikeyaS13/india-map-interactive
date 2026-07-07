@@ -1,0 +1,32 @@
+// Maps state names to approximate relative coordinates (%) on the SVG bounding box.
+// This allows placing markers at roughly the center of each state.
+export const stateCoordinates: Record<string, { x: number; y: number }> = {
+  "Andhra Pradesh": { x: 40, y: 73 },
+  "Arunachal Pradesh": { x: 92, y: 31 },
+  "Assam": { x: 85, y: 35 },
+  "Bihar": { x: 60, y: 40 },
+  "Chhattisgarh": { x: 48, y: 55 },
+  "Goa": { x: 18, y: 73 },
+  "Gujarat": { x: 12, y: 50 },
+  "Haryana": { x: 25, y: 23 },
+  "Himachal Pradesh": { x: 28, y: 10 },
+  "Jharkhand": { x: 58, y: 46 },
+  "Karnataka": { x: 25, y: 73 },
+  "Kerala": { x: 26, y: 88 },
+  "Madhya Pradesh": { x: 36, y: 49 },
+  "Maharashtra": { x: 22, y: 60 },
+  "Manipur": { x: 90, y: 42 },
+  "Meghalaya": { x: 82, y: 38 },
+  "Mizoram": { x: 88, y: 48 },
+  "Nagaland": { x: 92, y: 35 },
+  "Odisha": { x: 55, y: 58 },
+  "Punjab": { x: 30, y: 18 },
+  "Rajasthan": { x: 20, y: 35 },
+  "Sikkim": { x: 70, y: 35 },
+  "Tamil Nadu": { x: 35, y: 85 },
+  "Telangana": { x: 37, y: 63 },
+  "Tripura": { x: 82, y: 45 },
+  "Uttar Pradesh": { x: 43, y: 35 },
+  "Uttarakhand": { x: 37, y: 24 },
+  "West Bengal": { x: 66, y: 50 }
+};
