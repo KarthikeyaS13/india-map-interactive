@@ -1,47 +1,40 @@
-export interface CompanyLocation {
-  state: string;
+export interface StatePresence {
+  status?: "Active" | "Upcoming";
   offices: number;
   employees: number;
   logo: string;
   description: string;
-  status: "Active" | "Upcoming";
 }
 
 export const companyLogo = "/lighmodelogo.png"; // Updated path
 
-export const companyPresence: CompanyLocation[] = [
-  {
-    state: "Telangana",
+export const companyPresence: Record<string, StatePresence> = {
+  Telangana: {
+    status: "Active",
     offices: 3,
-    employees: 120,
+    employees: 185,
     logo: companyLogo,
-    description: "Regional Headquarters",
-    status: "Active",
+    description: "Head Office & Regional Office"
   },
-  {
-    state: "Karnataka",
-    offices: 2,
-    employees: 85,
+  Karnataka: {
+    status: "Active",
+    offices: 3,
+    employees: 210,
     logo: companyLogo,
-    description: "Development Center",
-    status: "Active",
+    description: "Development Center"
   },
-  {
-    state: "Maharashtra",
+  Maharashtra: {
+    status: "Active",
     offices: 1,
     employees: 60,
     logo: companyLogo,
-    description: "Sales Office",
-    status: "Active",
+    description: "Sales Office"
   },
-  {
-    state: "Tamil Nadu",
+  "Tamil Nadu": {
+    status: "Active",
     offices: 1,
     employees: 45,
     logo: companyLogo,
-    description: "Support Hub",
-    status: "Active",
+    description: "Support Hub"
   }
-];
-
-export const highlightedStates = companyPresence.map(p => p.state);
+};

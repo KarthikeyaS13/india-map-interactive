@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { CompanyLocation, companyLogo } from "../../data/companyPresence";
+import { companyLogo } from "../../data/companyPresence";
 import { stateCoordinates } from "../../utils/stateCoordinates";
 import { MapPin, Users, Building, PlusCircle } from "lucide-react";
 
 interface LocationFormProps {
-  onAddLocation: (location: CompanyLocation) => void;
+  onAddLocation: (location: any) => void;
 }
 
 export const LocationForm = ({ onAddLocation }: LocationFormProps) => {

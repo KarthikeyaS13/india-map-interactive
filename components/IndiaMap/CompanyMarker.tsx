@@ -5,11 +5,13 @@ interface CompanyMarkerProps {
   y: number;
   logo: string;
   isHovered: boolean;
+  isAmbientHighlighted?: boolean;
+  staggerDelay?: number;
   onMouseEnter: (e: React.MouseEvent) => void;
   onMouseLeave: () => void;
 }
 
-export const CompanyMarker = ({ x, y, logo, isHovered, onMouseEnter, onMouseLeave }: CompanyMarkerProps) => {
+export const CompanyMarker = ({ x, y, logo, isHovered, isAmbientHighlighted, staggerDelay = 0, onMouseEnter, onMouseLeave }: CompanyMarkerProps) => {
   return (
     <motion.div
       className="absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 z-10"
@@ -17,13 +19,15 @@ export const CompanyMarker = ({ x, y, logo, isHovered, onMouseEnter, onMouseLeav
       initial={{ opacity: 0, y: 10 }}
       animate={{ 
         opacity: 1, 
-        y: [0, -5, 0],
-        scale: isHovered ? 1.2 : 1 
+        y: isHovered ? [0, -5, 0] : (isAmbientHighlighted ? [0, -4.5, -4, -5, -4.5] : 0),
+        scale: isHovered ? 1.2 : (isAmbientHighlighted ? 1.03 : 1)
       }}
       transition={{ 
-        opacity: { duration: 0.5 },
-        y: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-        scale: { duration: 0.2 }
+        opacity: { duration: 0.4, delay: isHovered ? 0 : staggerDelay },
+        y: isHovered 
+          ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
+          : (isAmbientHighlighted ? { duration: 3.5, repeat: Infinity, ease: "easeInOut", times: [0, 0.15, 0.5, 0.8, 1], delay: staggerDelay } : { duration: 0.4 }),
+        scale: { duration: 0.4, delay: isHovered ? 0 : staggerDelay }
       }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -35,9 +39,19 @@ export const CompanyMarker = ({ x, y, logo, isHovered, onMouseEnter, onMouseLeav
       
       {/* Pulse ring effect */}
       <motion.div 
-        className="absolute inset-0 rounded-full bg-blue-500 opacity-20 -z-10"
-        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute inset-0 rounded-full bg-blue-500 -z-10"
+        initial={{ opacity: 0 }}
+        animate={
+          (isHovered || isAmbientHighlighted) 
+            ? { scale: [1, 1.6, 1], opacity: [0.3, 0, 0.3] }
+            : { scale: 1, opacity: 0 }
+        }
+        transition={{ 
+          duration: 2, 
+          repeat: (isHovered || isAmbientHighlighted) ? Infinity : 0, 
+          ease: "easeInOut",
+          delay: isHovered ? 0 : staggerDelay 
+        }}
       />
     </motion.div>
   );

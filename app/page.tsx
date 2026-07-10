@@ -1,24 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IndiaPresenceMap } from "../components/IndiaMap/IndiaPresenceMap";
 import { LocationForm } from "../components/IndiaMap/LocationForm";
-import { companyPresence, CompanyLocation } from "../data/companyPresence";
+import { companyPresence, StatePresence } from "../data/companyPresence";
 
 export default function Home() {
-  const [locations, setLocations] = useState<CompanyLocation[]>(companyPresence);
+  const [locations, setLocations] = useState<Record<string, StatePresence>>(companyPresence);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleAddLocation = (newLoc: CompanyLocation) => {
-    setLocations(prev => {
-      // If the location already exists, update it. Otherwise, add it.
-      const existsIndex = prev.findIndex(loc => loc.state === newLoc.state);
-      if (existsIndex >= 0) {
-        const updated = [...prev];
-        updated[existsIndex] = newLoc;
-        return updated;
+  // Load from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("india_presence_locations");
+    if (saved) {
+      try {
+        setLocations(JSON.parse(saved));
+      } catch (e) {
+        console.error("Error loading locations from localStorage", e);
       }
-      return [...prev, newLoc];
+    }
+    setIsLoaded(true);
+  }, []);
+
+  // Save to localStorage when locations state changes
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem("india_presence_locations", JSON.stringify(locations));
+    }
+  }, [locations, isLoaded]);
+
+  const handleAddLocation = (newLoc: any) => {
+    setLocations(prev => {
+      const stateName = newLoc.state;
+      const updated = { ...prev };
+      
+      const existingState = updated[stateName] || { 
+        status: newLoc.status,
+        offices: 0,
+        employees: 0,
+        description: "",
+        logo: newLoc.logo
+      };
+      
+      updated[stateName] = {
+        ...existingState,
+        status: newLoc.status,
+        offices: existingState.offices + newLoc.offices,
+        employees: existingState.employees + newLoc.employees,
+        description: newLoc.description || existingState.description,
+        logo: newLoc.logo || existingState.logo
+      };
+      
+      return updated;
     });
+  };
+
+  const handleResetLocations = () => {
+    if (window.confirm("Are you sure you want to reset the map to default data? Any custom locations will be deleted.")) {
+      setLocations(companyPresence);
+      localStorage.setItem("india_presence_locations", JSON.stringify(companyPresence));
+    }
   };
 
   return (
@@ -37,8 +78,14 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           
           {/* Form Section */}
-          <div className="w-full lg:w-1/3 shrink-0">
+          <div className="w-full lg:w-1/3 shrink-0 space-y-4">
             <LocationForm onAddLocation={handleAddLocation} />
+            <button
+              onClick={handleResetLocations}
+              className="w-full py-2.5 px-4 text-sm font-medium text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 bg-white hover:bg-red-50 dark:bg-slate-900 dark:hover:bg-red-950/30 rounded-xl border border-slate-200 dark:border-slate-700 transition-all duration-200"
+            >
+              Reset to Default Map Data
+            </button>
           </div>
 
           {/* Map Section */}

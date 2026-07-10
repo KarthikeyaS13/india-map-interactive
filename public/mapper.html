@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SVG Mapper</title>
+    <style>
+        body { margin: 0; padding: 0; background: white; overflow: scroll; }
+        object { width: 3000px; height: 3000px; }
+    </style>
+</head>
+<body>
+    <object data="Telangana_districts.svg" type="image/svg+xml" id="svg-object"></object>
+    <script>
+        document.getElementById('svg-object').addEventListener('load', function() {
+            const svgDoc = this.contentDocument;
+            const svg = svgDoc.querySelector('svg');
+            const paths = svgDoc.querySelectorAll('#Map_1_ path');
+            paths.forEach((path, index) => {
+                const bbox = path.getBBox();
+                const cx = bbox.x + bbox.width / 2;
+                const cy = bbox.y + bbox.height / 2;
+                
+                const text = svgDoc.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', cx);
+                text.setAttribute('y', cy);
+                text.setAttribute('class', 'label');
+                text.setAttribute('font-size', '60');
+                text.setAttribute('fill', 'red');
+                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('alignment-baseline', 'middle');
+                text.textContent = index.toString();
+                
+                text.setAttribute('stroke', 'white');
+                text.setAttribute('stroke-width', '8');
+                text.setAttribute('paint-order', 'stroke');
+                
+                svg.appendChild(text);
+            });
+        });
+    </script>
+</body>
+</html>
